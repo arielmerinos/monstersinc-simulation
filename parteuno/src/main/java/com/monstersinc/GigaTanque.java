@@ -1,19 +1,17 @@
 package com.monstersinc;
 
 public class GigaTanque implements Tanque {
-    private final int capacidad;
+  private final int capacidad;
 
-    public GigaTanque(int capacidad) {
-        this.capacidad = 2*capacidad;
-    }
+  public GigaTanque(int capacidad) { this.capacidad = 2 * capacidad; }
 
-    @Override
-    public int obtenerCapacidad() {
-        return capacidad;
-    }
+  @Override
+  public int obtenerCapacidad() {
+    return capacidad;
+  }
 
-    @Override
-    public String obtenerTipo() {
-        return "GigaTanque";
-    }
+  @Override
+  public String obtenerTipo() {
+    return "GigaTanque";
+  }
 }
