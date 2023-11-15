@@ -1,6 +1,5 @@
 package com.monstersinc;
 
-import java.rmi.server.RemoteStub;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -30,29 +29,33 @@ public class Vestidor {
         if( lockerNumber < 0 || lockerNumber >= lockers.length){
             return false;
         }
-
-        String storedPassword = lockerPasswords.get(lockerNumber);
-        return storedPassword.equals(password);
+        return password.equals(password);
     }
 
-    public void usarCasillero(int lockerNumber) throws InterruptedException {
-        lockers[lockerNumber].lock();
-        try {
-            // Dejan sus cosas personales
-            // Se ponen olorante
-            // Only they can use the locker with their password 
-            System.out.println("Usando casillero " + lockerNumber);
-            Thread.sleep(1000); // Simulación de tiempo en el vestidor
+    public void usarCasillero(int lockerNumber, String password) throws InterruptedException {
 
-            // Se ponen su olorante
-            System.out.println("Poniendose olorante " + lockerNumber);
-            Thread.sleep(1000); // Simulación de tiempo en el vestidor
+        if (verifyAcces(lockerNumber, password)) {
+            lockers[lockerNumber].lock();
 
-            // they might take some time to do this
-            System.out.println("Dejando sus cosas personales y poniéndose el casco " + lockerNumber);
-            Thread.sleep(1000); // Simulación de tiempo en el vestidor
-        } finally {
-            lockers[lockerNumber].unlock();
+            try {
+                // Dejan sus cosas personales
+                // Se ponen olorante
+                // Only they can use the locker with their password 
+                System.out.println("Usando casillero " + lockerNumber);
+                Thread.sleep(1000); // Simulación de tiempo en el vestidor
+
+                // Se ponen su olorante
+                System.out.println("Poniendose olorante " + lockerNumber);
+                Thread.sleep(1000); // Simulación de tiempo en el vestidor
+
+                // they might take some time to do this
+                System.out.println("Dejando sus cosas personales y poniéndose el casco " + lockerNumber);
+                Thread.sleep(1000); // Simulación de tiempo en el vestidor
+            } finally {
+                lockers[lockerNumber].unlock();
+            }
+        } else {
+            System.out.println("No se pudo acceder al casillero " + lockerNumber);
         }
     }
 }

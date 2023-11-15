@@ -1,5 +1,6 @@
 package com.monstersinc;
 
+import java.util.Random;
 import java.util.concurrent.*;
 
 /**
@@ -31,6 +32,8 @@ public class MonsterIncSimulation {
         // Se inicializa el pool de hilos con capacidad para ejecutar las actividades de los monstruos en paralelo.
         ExecutorService executor = Executors.newFixedThreadPool(numMonstruos);
 
+        Random random = new Random();
+
         // Simulación de la actividad de cada monstruo
         for(int i = 0; i < numMonstruos; i++) {
             // Creación del monstruo ESPECIAL con atributos específicos.
@@ -54,8 +57,15 @@ public class MonsterIncSimulation {
                     cafeteria.releaseMesa(2);  // El monstruo libera la mesa después de comer.
 
                     // Ir al vestidor
-                    vestidor.usarCasillero(monstruo.getNumeroCasillero());
+                    vestidor.usarCasillero(monstruo.getNumeroCasillero(), monstruo.getContrasenaCasillero());
                     System.out.println(monstruo.getNombre() + " está en el vestidor...");
+
+                    // Intentar usar un casillero al azar
+                    int randomLocker = random.nextInt(100);
+                    String randomPassword = "password" + random.nextInt(100);
+                    System.out.println(monstruo.getNombre() + " intenta usar el casillero (might fail)" + randomLocker);
+                    vestidor.usarCasillero(randomLocker, randomPassword);
+
                     // Es la manera más simple que encontré de simular que algo está tomando tiempo
                     Thread.sleep(1000); // Simulación de tiempo en el vestidor
 
