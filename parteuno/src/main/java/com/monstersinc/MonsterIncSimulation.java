@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 
 /**
  * Esta clase simula la actividad diaria de un grupo de monstruos en Monster Inc.
- * Cada monstruo va a la cafetería, luego al vestidor y, finalmente, al baño.
+ * Cada monstruo va a la cafetería, luego al vestidor y, finalmente, al baño
  */
 public class MonsterIncSimulation {
 
@@ -22,15 +22,11 @@ public class MonsterIncSimulation {
         int numMonstruos = 12;
 
         // Creación de las distintas zonas de la empresa
-
         // La cafetería tiene un número limitado de mesas y sillas, definido por los argumentos.
         CafeteriaMediator cafeteria = new CafeteriaMediator(5, 5, 3, 100); // Ejemplo de parámetros
 
-        // El vestidor es un singleton, lo que significa que solo hay un vestidor en la simulación.
+        // El vestidor es un singleton lo que significa que solo hay un vestidor en la simulación.
         Vestidor vestidor = Vestidor.getInstance();
-
-        // El vestidor es un singleton, lo que significa que solo hay un vestidor en la simulación.
-        BanoFactory banoFactory = new BanoFactory();
 
         // Se inicializa el pool de hilos con capacidad para ejecutar las actividades de los monstruos en paralelo.
         ExecutorService executor = Executors.newFixedThreadPool(numMonstruos);
@@ -64,7 +60,7 @@ public class MonsterIncSimulation {
                     Thread.sleep(1000); // Simulación de tiempo en el vestidor
 
                     // Ir al baño
-                    Bano bano = banoFactory.createBano(monstruo.getTipo());
+                    Bano bano = BanoFactory.createBano(monstruo.getTipo());
                     bano.usar();
                     System.out.println(monstruo.getNombre() + " está en el baño...");
                     // Es la manera más simple que encontré de simular que algo está tomando tiempo

@@ -8,7 +8,8 @@ public class Vestidor {
     private final Lock[] lockers;
 
     private Vestidor() {
-        lockers = new ReentrantLock[100];  // Asumamos que hay 100 casilleros
+        lockers = new ReentrantLock[100];  // Asumamos que hay 100 casilleros y cada casillero lo vamos a proteger con un ReentrantLock
+        
         for (int i = 0; i < 100; i++) {
             lockers[i] = new ReentrantLock();
         }
