@@ -7,23 +7,6 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 public class FabricaDePuertas {
-    public class Puerta {
-        String destino; // "Niño" o "Adulto"
-        boolean esEventoEspecial; // Fiesta o Pijamada
-
-        Puerta(String destino, boolean esEventoEspecial) {
-            this.destino = destino;
-            this.esEventoEspecial = esEventoEspecial;
-        }
-
-        @Override
-        public String toString() {
-            return "Puerta{" +
-                    "destino='" + destino + '\'' +
-                    ", esEventoEspecial=" + esEventoEspecial +
-                    '}';
-        }
-    }
 
     private final Lock lockFabricacion = new ReentrantLock();
     private final Random random = new Random();

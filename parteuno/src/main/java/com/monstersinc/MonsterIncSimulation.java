@@ -3,8 +3,6 @@ package com.monstersinc;
 import java.util.Random;
 import java.util.concurrent.*;
 
-import com.monstersinc.FabricaDePuertas.Puerta;
-
 /**
  * Esta clase simula la actividad diaria de un grupo de monstruos en Monster Inc.
  * Cada monstruo va a la cafetería, luego al vestidor y, finalmente, al baño
@@ -71,6 +69,27 @@ public class MonsterIncSimulation {
                 }
             }
         });
+
+        FabricaDeTanques fabricaDeTanques = new FabricaDeTanques();
+
+        // Crear y ejecutar una tarea para manejar tanques del almacén
+        ExecutorService manejadorDeTanques = Executors.newSingleThreadExecutor();
+        manejadorDeTanques.execute(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (fabricaDeTanques.cantidadTanquesEnAlmacen() > 0) {
+                    FabricaDeTanques.Tanque tanque = fabricaDeTanques.obtenerTanqueDelAlmacen();
+                    System.out.println("Manejando tanque del almacén: " + tanque);
+                    // Aquí puedes añadir lógica adicional si es necesario
+                }
+                try {
+                    Thread.sleep(500); // Tiempo de espera antes de manejar el siguiente tanque
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+
+        AlmacenDePuertas almacenDePuertas = new AlmacenDePuertas(numMonstruos);
         
         // Simulación de la actividad de cada monstruo
         for(int i = 0; i < numMonstruos; i++) {
@@ -149,8 +168,24 @@ public class MonsterIncSimulation {
                         System.out.println(monstruo.getNombre() + " ha roto un tanque. Enviando a reparación...");
                         centroDeReparacion.agregarItemParaReparar(item);
                     }
+                    // Fabricar un tanque
+                    
+                    FabricaDeTanques.TipoTanque tipoTanque = FabricaDeTanques.TipoTanque.ESTANDAR; // O cualquier lógica para elegir el tipo
+                    FabricaDeTanques.Tanque nuevoTanque = fabricaDeTanques.fabricarTanque(tipoTanque);
+                    System.out.println(Thread.currentThread().getName() + " ha fabricado un tanque: " + nuevoTanque);
 
+                    // Simular la fabricación de una puerta
+                    com.monstersinc.Puerta puertaFabricada = fabricaDePuertas.fabricarPuerta();
+                    almacenDePuertas.agregarPuerta(puertaFabricada);
 
+                    // Simular la asignación de una puerta y su uso
+                    String idPuerta = puertaFabricada.getId(); // Obtener el ID de la puerta fabricada
+                    Puerta puertaAsignada = almacenDePuertas.obtenerPuerta(idPuerta);
+                    
+                    if (puertaAsignada != null) {
+                        almacenDePuertas.actualizarEstadoPuerta(idPuerta, EstadoPuerta.EN_USO);
+                        almacenDePuertas.actualizarEstadoPuerta(idPuerta, EstadoPuerta.DISPONIBLE);
+                    }
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
