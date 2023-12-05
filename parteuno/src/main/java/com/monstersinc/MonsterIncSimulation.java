@@ -89,6 +89,11 @@ public class MonsterIncSimulation {
             }
         });
 
+        AlmacenDeTanques almacenDeTanques = new AlmacenDeTanques();
+        RecolectorIndustrial recolector = new RecolectorIndustrial(10000); // Capacidad ejemplo de 10000 unidades de energía
+
+
+
         AlmacenDePuertas almacenDePuertas = new AlmacenDePuertas(numMonstruos);
         
         // Simulación de la actividad de cada monstruo
@@ -185,6 +190,13 @@ public class MonsterIncSimulation {
                     if (puertaAsignada != null) {
                         almacenDePuertas.actualizarEstadoPuerta(idPuerta, EstadoPuerta.EN_USO);
                         almacenDePuertas.actualizarEstadoPuerta(idPuerta, EstadoPuerta.DISPONIBLE);
+                    }
+
+                    // Simular la recolección de energía de un tanque
+                    AlmacenDeTanques.Tanque tanqueParaVaciar = almacenDeTanques.obtenerTanque("ID"); // Obtener un tanque del almacén
+                    if (tanqueParaVaciar != null && tanqueParaVaciar.estado == AlmacenDeTanques.EstadoTanque.DISPONIBLE) {
+                        recolector.vaciarTanque(tanqueParaVaciar);
+                        System.out.println("Energía recolectada: " + recolector.getEnergiaAcumulada());
                     }
 
                 } catch (InterruptedException e) {
