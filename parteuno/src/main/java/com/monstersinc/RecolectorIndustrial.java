@@ -14,13 +14,13 @@ public class RecolectorIndustrial {
         this.energiaAcumulada = new AtomicInteger(0);
     }
 
-    public void vaciarTanque(AlmacenDeTanques.Tanque tanque) {
+    public void vaciarTanque(Tanque tanque) {
         lockRecolector.lock();
         try {
             int energiaExtraida = tanque.getCapacidad(); // Suponiendo que cada tanque tiene un atributo 'capacidad'
             if (energiaAcumulada.get() + energiaExtraida <= capacidadRecolector) {
                 energiaAcumulada.addAndGet(energiaExtraida);
-                tanque.get = AlmacenDeTanques.EstadoTanque.DISPONIBLE;
+                tanque.setEstado(EstadoTanque.DISPONIBLE);
             }
         } finally {
             lockRecolector.unlock();

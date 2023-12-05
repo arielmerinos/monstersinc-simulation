@@ -1,9 +1,9 @@
 package com.monstersinc;
 
-    public  class Tanque {
+    public  class Tanque implements TanqueI {
         private final String id;
         private final String categoria; // Ej: "Estandar", "Maxitanque", etc.
-        private EstadoTanque estado;
+        EstadoTanque estado;
         private int capacidad = 100; // Ej: 100, 200, etc.
 
         public void setCapacidad(int capacidad) {
@@ -11,6 +11,12 @@ package com.monstersinc;
         }
         public int getCapacidad() {
             return capacidad;
+        }
+        public String getId() {
+            return id;
+        }
+        public void setEstado(EstadoTanque estado) {
+            this.estado = estado;
         }
         
         public Tanque(String id, String categoria) {
@@ -33,5 +39,15 @@ package com.monstersinc;
                    ", estado=" + estado +
                    ", capacidad=" + capacidad +
                    '}';
+        }
+        @Override
+        public int obtenerCapacidad() {
+            // Implement the obtenerCapacidad() method here
+            return capacidad;
+        }
+        @Override
+        public String obtenerTipo() {
+            // Implement the obtenerTipo() method here
+            return categoria;
         }
     }

@@ -15,7 +15,7 @@ public class FabricaTanques {
     }
     // ¿? Como cubrir la parte - "Para fabricarlos, se requiere un monstruo para cada uno" 
     // Falta la parte de  recoleccion y transporte al almacen
-    public Tanque fabricarTanque(String tipo, int capacidad) {
+    public TanqueI fabricarTanque(String tipo, int capacidad) {
         fabricacionLock.lock();
         try {
             // Simulación de tiempo de fabricación

@@ -6,13 +6,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AlmacenDeTanques {
-    public enum EstadoTanque {
-        EN_USO,
-        EN_REPARACION,
-        DISPONIBLE
-    }
-
-
 
     private final Map<String, Tanque> almacen;
     private final Lock lockAlmacen = new ReentrantLock();
@@ -24,7 +17,7 @@ public class AlmacenDeTanques {
     public void agregarTanque(Tanque tanque) {
         lockAlmacen.lock();
         try {
-            almacen.put(tanque.id, tanque);
+            almacen.put(tanque.getId(), tanque);
         } finally {
             lockAlmacen.unlock();
         }

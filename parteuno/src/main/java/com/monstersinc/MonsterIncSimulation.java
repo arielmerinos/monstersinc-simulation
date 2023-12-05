@@ -193,8 +193,8 @@ public class MonsterIncSimulation {
                     }
 
                     // Simular la recolección de energía de un tanque
-                    AlmacenDeTanques.Tanque tanqueParaVaciar = almacenDeTanques.obtenerTanque("ID"); // Obtener un tanque del almacén
-                    if (tanqueParaVaciar != null && tanqueParaVaciar.estado == AlmacenDeTanques.EstadoTanque.DISPONIBLE) {
+                    Tanque tanqueParaVaciar = almacenDeTanques.obtenerTanque("ID"); // Obtener un tanque del almacén
+                    if (tanqueParaVaciar != null && tanqueParaVaciar.estado == EstadoTanque.DISPONIBLE) {
                         recolector.vaciarTanque(tanqueParaVaciar);
                         System.out.println("Energía recolectada: " + recolector.getEnergiaAcumulada());
                     }

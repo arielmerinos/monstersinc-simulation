@@ -1,6 +1,6 @@
 package com.monstersinc;
 
-public class GigaTanque implements Tanque {
+public class GigaTanque implements TanqueI {
     private final int capacidad;
 
     public GigaTanque(int capacidad) {
