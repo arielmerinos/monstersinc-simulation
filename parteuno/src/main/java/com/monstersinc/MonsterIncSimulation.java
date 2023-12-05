@@ -3,11 +3,24 @@ package com.monstersinc;
 import java.util.Random;
 import java.util.concurrent.*;
 
+import com.monstersinc.FabricaDePuertas.Puerta;
+
 /**
  * Esta clase simula la actividad diaria de un grupo de monstruos en Monster Inc.
  * Cada monstruo va a la cafetería, luego al vestidor y, finalmente, al baño
  */
 public class MonsterIncSimulation {
+
+    // Método para asignar puertas a monstruos
+    private static void asignarPuertaAMonstruo(Puerta puerta) {
+        // Lógica para asignar la puerta a un monstruo
+        // Por ejemplo, decidir si la puerta se usa para asustar o entretener, basado en el destino y si es evento especial
+        String accion = puerta.destino.equals("Niño") ? "asustar" : "entretener";
+        if (puerta.esEventoEspecial) {
+            accion += " en un evento especial";
+        }
+        System.out.println("Puerta asignada para " + accion);
+    }
 
     public static void main(String[] args) {
         // Este bloque permite recibir el número de monstruos como argumento al ejecutar el programa.
@@ -32,13 +45,51 @@ public class MonsterIncSimulation {
         // Se inicializa el pool de hilos con capacidad para ejecutar las actividades de los monstruos en paralelo.
         ExecutorService executor = Executors.newFixedThreadPool(numMonstruos);
 
+        CentroDeSustos centroDeSustos = new CentroDeSustos("CentroSustos1", 10); // Ejemplo: capacidad de 10 contenedores
+
+        CentroDeRisas centroDeRisas = new CentroDeRisas("CentroRisas1", 5, 3); // Ejemplo: 5 maxitanques y 3 ultratanques
+
         Random random = new Random();
 
+        CentroDeReparacion centroDeReparacion = new CentroDeReparacion();
+        FabricaDePuertas fabricaDePuertas = new FabricaDePuertas();
+
+        // Crear y ejecutar una tarea para manejar puertas del almacén
+        ExecutorService manejadorDePuertas = Executors.newSingleThreadExecutor();
+        manejadorDePuertas.execute(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (fabricaDePuertas.cantidadPuertasEnAlmacen() > 0) {
+                    Puerta puerta = fabricaDePuertas.obtenerPuertaDelAlmacen();
+                    System.out.println("Manejando puerta del almacén: " + puerta);
+                    asignarPuertaAMonstruo(puerta);
+                    // Aquí puedes añadir lógica adicional si es necesario
+                }
+                try {
+                    Thread.sleep(500); // Tiempo de espera antes de manejar la siguiente puerta
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+        
         // Simulación de la actividad de cada monstruo
         for(int i = 0; i < numMonstruos; i++) {
             // Creación del monstruo ESPECIAL con atributos específicos.
             Monstruo monstruo = new Monstruo("Monstruo" + i, "Grande", "Azul", 25, i, "password" + i);
 
+
+            // Crear y ejecutar una tarea para reparar elementos en un bucle continuo
+            ExecutorService reparadores = Executors.newFixedThreadPool(2); // Ejemplo con 2 reparadores
+            reparadores.execute(() -> {
+                while (!Thread.currentThread().isInterrupted()) {
+                    centroDeReparacion.repararItem();
+                    try {
+                        Thread.sleep(500); // Pequeña pausa entre reparaciones
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            });
 
             // Ejecución de hilos concurrentes usando executor
             // la lambda está Representando el ciclo de vida de los monstruos
@@ -75,6 +126,32 @@ public class MonsterIncSimulation {
                     System.out.println(monstruo.getNombre() + " está en el baño...");
                     // Es la manera más simple que encontré de simular que algo está tomando tiempo
                     Thread.sleep(1500); // Simulación de tiempo en el baño
+
+
+                    // Actividad en el Centro de Sustos
+                    System.out.println(monstruo.getNombre() + " está en el Centro de Sustos...");
+                    centroDeSustos.asustarYGenerarEnergia();
+
+                    // Simulación de tiempo en el Centro de Sustos
+                    Thread.sleep(1000); // Ajustar este tiempo según sea necesario
+
+                    // Actividad en el Centro de Risas
+                    System.out.println(monstruo.getNombre() + " está en el Centro de Risas...");
+                    centroDeRisas.generarRisaYAlmacenarEnergia();
+
+                    // Simulación de tiempo en el Centro de Risas
+                    Thread.sleep(1000); // Ajustar este tiempo según sea necesario
+                    
+                    // Simular que un elemento se rompe y necesita reparación
+                    CentroDeReparacion.ItemReparable item = centroDeReparacion.new ItemReparable("Tanque", 0);
+                    item.usar(); // Simula el uso del elemento que potencialmente podría romperlo
+                    if (item.necesitaReparacion) {
+                        System.out.println(monstruo.getNombre() + " ha roto un tanque. Enviando a reparación...");
+                        centroDeReparacion.agregarItemParaReparar(item);
+                    }
+
+
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
