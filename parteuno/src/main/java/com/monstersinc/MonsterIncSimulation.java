@@ -60,7 +60,6 @@ public class MonsterIncSimulation {
                     Puerta puerta = fabricaDePuertas.obtenerPuertaDelAlmacen();
                     System.out.println("Manejando puerta del almacén: " + puerta);
                     asignarPuertaAMonstruo(puerta);
-                    // Aquí puedes añadir lógica adicional si es necesario
                 }
                 try {
                     Thread.sleep(500); // Tiempo de espera antes de manejar la siguiente puerta
@@ -79,7 +78,6 @@ public class MonsterIncSimulation {
                 if (fabricaDeTanques.cantidadTanquesEnAlmacen() > 0) {
                     FabricaDeTanques.Tanque tanque = fabricaDeTanques.obtenerTanqueDelAlmacen();
                     System.out.println("Manejando tanque del almacén: " + tanque);
-                    // Aquí puedes añadir lógica adicional si es necesario
                 }
                 try {
                     Thread.sleep(500); // Tiempo de espera antes de manejar el siguiente tanque
@@ -91,7 +89,6 @@ public class MonsterIncSimulation {
 
         AlmacenDeTanques almacenDeTanques = new AlmacenDeTanques();
         RecolectorIndustrial recolector = new RecolectorIndustrial(10000); // Capacidad ejemplo de 10000 unidades de energía
-
 
 
         AlmacenDePuertas almacenDePuertas = new AlmacenDePuertas(numMonstruos);
@@ -117,7 +114,6 @@ public class MonsterIncSimulation {
 
             // Ejecución de hilos concurrentes usando executor
             // la lambda está Representando el ciclo de vida de los monstruos
-            //
             executor.execute(() -> {
                 try {
                     // Ir a la cafetería
@@ -157,14 +153,14 @@ public class MonsterIncSimulation {
                     centroDeSustos.asustarYGenerarEnergia();
 
                     // Simulación de tiempo en el Centro de Sustos
-                    Thread.sleep(1000); // Ajustar este tiempo según sea necesario
+                    Thread.sleep(1000); 
 
                     // Actividad en el Centro de Risas
                     System.out.println(monstruo.getNombre() + " está en el Centro de Risas...");
                     centroDeRisas.generarRisaYAlmacenarEnergia();
 
                     // Simulación de tiempo en el Centro de Risas
-                    Thread.sleep(1000); // Ajustar este tiempo según sea necesario
+                    Thread.sleep(1000); 
                     
                     // Simular que un elemento se rompe y necesita reparación
                     CentroDeReparacion.ItemReparable item = centroDeReparacion.new ItemReparable("Tanque", 0);
