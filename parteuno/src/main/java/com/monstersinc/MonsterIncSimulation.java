@@ -76,21 +76,30 @@ public class MonsterIncSimulation {
         manejadorDeTanques.execute(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 if (fabricaDeTanques.cantidadTanquesEnAlmacen() > 0) {
-                    FabricaDeTanques.Tanque tanque = fabricaDeTanques.obtenerTanqueDelAlmacen();
+                    Tanque tanque = fabricaDeTanques.obtenerTanqueDelAlmacen();
                     System.out.println("Manejando tanque del almacén: " + tanque);
                 }
                 try {
-                    Thread.sleep(500); // Tiempo de espera antes de manejar el siguiente tanque
+                    Thread.sleep(5); // Tiempo de espera antes de manejar el siguiente tanque
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
         });
 
+        /**
+         * Instancia que representa un almacén de tanques.
+         */
         AlmacenDeTanques almacenDeTanques = new AlmacenDeTanques();
+        
+        /**
+         * Instancia que representa un recolector industrial.
+         */
         RecolectorIndustrial recolector = new RecolectorIndustrial(10000); // Capacidad ejemplo de 10000 unidades de energía
 
-
+        /**
+         * Instancia que representa un almacén de puertas.
+         */
         AlmacenDePuertas almacenDePuertas = new AlmacenDePuertas(numMonstruos);
         
         // Simulación de la actividad de cada monstruo
@@ -98,14 +107,13 @@ public class MonsterIncSimulation {
             // Creación del monstruo ESPECIAL con atributos específicos.
             Monstruo monstruo = new Monstruo("Monstruo" + i, "Grande", "Azul", 25, i, "password" + i);
 
-
             // Crear y ejecutar una tarea para reparar elementos en un bucle continuo
             ExecutorService reparadores = Executors.newFixedThreadPool(2); // Ejemplo con 2 reparadores
             reparadores.execute(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
                     centroDeReparacion.repararItem();
                     try {
-                        Thread.sleep(500); // Pequeña pausa entre reparaciones
+                        Thread.sleep(5); // Pequeña pausa entre reparaciones
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
@@ -153,14 +161,14 @@ public class MonsterIncSimulation {
                     centroDeSustos.asustarYGenerarEnergia();
 
                     // Simulación de tiempo en el Centro de Sustos
-                    Thread.sleep(1000); 
+                    Thread.sleep(100); 
 
                     // Actividad en el Centro de Risas
                     System.out.println(monstruo.getNombre() + " está en el Centro de Risas...");
                     centroDeRisas.generarRisaYAlmacenarEnergia();
 
                     // Simulación de tiempo en el Centro de Risas
-                    Thread.sleep(1000); 
+                    Thread.sleep(10); 
                     
                     // Simular que un elemento se rompe y necesita reparación
                     CentroDeReparacion.ItemReparable item = centroDeReparacion.new ItemReparable("Tanque", 0);
@@ -171,8 +179,8 @@ public class MonsterIncSimulation {
                     }
                     // Fabricar un tanque
                     
-                    FabricaDeTanques.TipoTanque tipoTanque = FabricaDeTanques.TipoTanque.ESTANDAR; // O cualquier lógica para elegir el tipo
-                    FabricaDeTanques.Tanque nuevoTanque = fabricaDeTanques.fabricarTanque(tipoTanque);
+                    TipoTanque tipoTanque = TipoTanque.ESTANDAR; // O cualquier lógica para elegir el tipo
+                    Tanque nuevoTanque = fabricaDeTanques.fabricarTanque(tipoTanque);
                     System.out.println(Thread.currentThread().getName() + " ha fabricado un tanque: " + nuevoTanque);
 
                     // Simular la fabricación de una puerta
@@ -187,27 +195,22 @@ public class MonsterIncSimulation {
                         almacenDePuertas.actualizarEstadoPuerta(idPuerta, EstadoPuerta.EN_USO);
                         almacenDePuertas.actualizarEstadoPuerta(idPuerta, EstadoPuerta.DISPONIBLE);
                     }
-
+                    
                     // Simular la recolección de energía de un tanque
-                    Tanque tanqueParaVaciar = almacenDeTanques.obtenerTanque("ID"); // Obtener un tanque del almacén
+                    Tanque tanqueParaVaciar = almacenDeTanques.obtenerTanque(nuevoTanque.getId()); // Obtener un tanque del almacén
+                    System.out.println("------------------------------------tanque para vaciar: " + tanqueParaVaciar);
                     if (tanqueParaVaciar != null && tanqueParaVaciar.estado == EstadoTanque.DISPONIBLE) {
                         recolector.vaciarTanque(tanqueParaVaciar);
                         System.out.println("Energía recolectada: " + recolector.getEnergiaAcumulada());
                     }
 
+                    executor.awaitTermination(1, TimeUnit.MINUTES);
+                    // Quién es el proceso de cierre del Executor Service Lo que significa que no se aceptan más tareas
+                    executor.shutdown();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             });
-        }
-
-        // Quién es el proceso de cierre del Executor Service Lo que significa que no se aceptan más tareas
-        executor.shutdown();
-        try {
-            // Espera que todas las tareas se completen o que pase una hora
-            executor.awaitTermination(1, TimeUnit.HOURS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

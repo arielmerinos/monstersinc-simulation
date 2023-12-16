@@ -31,7 +31,5 @@ public class RecolectorIndustrial {
         return energiaAcumulada.get();
     }
 
-    // Otros métodos según sea necesario
-    // ...
 }
 

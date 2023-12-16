@@ -3,34 +3,30 @@ package com.monstersinc;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.Random;
+import java.util.UUID;
 import java.util.Queue;
 import java.util.LinkedList;
 
 public class FabricaDeTanques {
-    enum TipoTanque {
-        ESTANDAR,
-        MAXITANQUE,
-        ULTRATANQUE,
-        GIGATANQUE
-    }
 
-    class Tanque {
-        TipoTanque tipo;
-        int capacidad;
 
-        Tanque(TipoTanque tipo, int capacidad) {
-            this.tipo = tipo;
-            this.capacidad = capacidad;
-        }
+    // class Tanque {
+    //     TipoTanque tipo;
+    //     int capacidad;
 
-        @Override
-        public String toString() {
-            return "Tanque{" +
-                    "tipo=" + tipo +
-                    ", capacidad=" + capacidad +
-                    '}';
-        }
-    }
+    //     Tanque(TipoTanque tipo, int capacidad) {
+    //         this.tipo = tipo;
+    //         this.capacidad = capacidad;
+    //     }
+
+    //     @Override
+    //     public String toString() {
+    //         return "Tanque{" +
+    //                 "tipo=" + tipo +
+    //                 ", capacidad=" + capacidad +
+    //                 '}';
+    //     }
+    // }
 
     private final Lock lockFabricacion = new ReentrantLock();
     private final Queue<Tanque> almacenTanques = new LinkedList<>();
@@ -40,7 +36,8 @@ public class FabricaDeTanques {
         lockFabricacion.lock();
         try {
             int capacidad = calcularCapacidad(tipo);
-            Tanque nuevoTanque = new Tanque(tipo, capacidad);
+            String id = UUID.randomUUID().toString();
+            Tanque nuevoTanque = new Tanque( id, tipo, capacidad);
             almacenTanques.add(nuevoTanque);
 
             simularTiempoFabricacion();
@@ -52,7 +49,7 @@ public class FabricaDeTanques {
 
     private void simularTiempoFabricacion() {
         try {
-            Thread.sleep(random.nextInt(1000) + 500); // Simular tiempo de fabricación
+            Thread.sleep(random.nextInt(100) + 50); // Simular tiempo de fabricación
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
