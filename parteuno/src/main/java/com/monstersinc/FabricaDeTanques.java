@@ -10,24 +10,6 @@ import java.util.LinkedList;
 public class FabricaDeTanques {
 
 
-    // class Tanque {
-    //     TipoTanque tipo;
-    //     int capacidad;
-
-    //     Tanque(TipoTanque tipo, int capacidad) {
-    //         this.tipo = tipo;
-    //         this.capacidad = capacidad;
-    //     }
-
-    //     @Override
-    //     public String toString() {
-    //         return "Tanque{" +
-    //                 "tipo=" + tipo +
-    //                 ", capacidad=" + capacidad +
-    //                 '}';
-    //     }
-    // }
-
     private final Lock lockFabricacion = new ReentrantLock();
     private final Queue<Tanque> almacenTanques = new LinkedList<>();
     private final Random random = new Random();

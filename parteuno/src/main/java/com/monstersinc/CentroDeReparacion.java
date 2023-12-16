@@ -61,7 +61,7 @@ public class CentroDeReparacion {
                 if (item != null && item.necesitaReparacion) {
                     // Simular el tiempo de reparación
                     try {
-                        Thread.sleep(1000); // Simular tiempo de reparación
+                        Thread.sleep(10); // Simular tiempo de reparación
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }

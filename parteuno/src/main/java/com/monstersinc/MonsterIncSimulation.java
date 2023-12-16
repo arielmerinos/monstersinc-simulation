@@ -31,7 +31,7 @@ public class MonsterIncSimulation {
 
 
         // Por simplicidad, se establece el número de monstruos a 12 para esta simulación.
-        int numMonstruos = 12;
+        int numMonstruos = 1;
 
         // Creación de las distintas zonas de la empresa
         // La cafetería tiene un número limitado de mesas y sillas, definido por los argumentos.
@@ -53,21 +53,22 @@ public class MonsterIncSimulation {
         FabricaDePuertas fabricaDePuertas = new FabricaDePuertas();
 
         // Crear y ejecutar una tarea para manejar puertas del almacén
-        ExecutorService manejadorDePuertas = Executors.newSingleThreadExecutor();
-        manejadorDePuertas.execute(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                if (fabricaDePuertas.cantidadPuertasEnAlmacen() > 0) {
-                    Puerta puerta = fabricaDePuertas.obtenerPuertaDelAlmacen();
-                    System.out.println("Manejando puerta del almacén: " + puerta);
-                    asignarPuertaAMonstruo(puerta);
-                }
-                try {
-                    Thread.sleep(500); // Tiempo de espera antes de manejar la siguiente puerta
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        });
+        // ExecutorService manejadorDePuertas = Executors.newSingleThreadExecutor();
+
+        // manejadorDePuertas.execute(() -> {
+        //     while (!Thread.currentThread().isInterrupted()) {
+        //         if (fabricaDePuertas.cantidadPuertasEnAlmacen() > 0) {
+        //             Puerta puerta = fabricaDePuertas.obtenerPuertaDelAlmacen();
+        //             System.out.println("Manejando puerta del almacén: " + puerta);
+        //             asignarPuertaAMonstruo(puerta);
+        //         }
+        //         try {
+        //             Thread.sleep(500); // Tiempo de espera antes de manejar la siguiente puerta
+        //         } catch (InterruptedException e) {
+        //             Thread.currentThread().interrupt();
+        //         }
+        //     }
+        // });
 
         FabricaDeTanques fabricaDeTanques = new FabricaDeTanques();
 
@@ -132,7 +133,7 @@ public class MonsterIncSimulation {
 
 
                     // Es la manera más simple que encontré de simular que algo está tomando tiempo
-                    Thread.sleep(2000); // Simulación de tiempo comiendo
+                    Thread.sleep(20); // Simulación de tiempo comiendo
                     cafeteria.releaseMesa(2);  // El monstruo libera la mesa después de comer.
 
                     // Ir al vestidor
@@ -146,14 +147,14 @@ public class MonsterIncSimulation {
                     vestidor.usarCasillero(randomLocker, randomPassword);
 
                     // Es la manera más simple que encontré de simular que algo está tomando tiempo
-                    Thread.sleep(1000); // Simulación de tiempo en el vestidor
+                    Thread.sleep(10); // Simulación de tiempo en el vestidor
 
                     // Ir al baño
                     Bano bano = BanoFactory.createBano(monstruo.getTipo());
                     bano.usar();
                     System.out.println(monstruo.getNombre() + " está en el baño...");
                     // Es la manera más simple que encontré de simular que algo está tomando tiempo
-                    Thread.sleep(1500); // Simulación de tiempo en el baño
+                    Thread.sleep(15); // Simulación de tiempo en el baño
 
 
                     // Actividad en el Centro de Sustos
@@ -161,7 +162,7 @@ public class MonsterIncSimulation {
                     centroDeSustos.asustarYGenerarEnergia();
 
                     // Simulación de tiempo en el Centro de Sustos
-                    Thread.sleep(100); 
+                    Thread.sleep(10); 
 
                     // Actividad en el Centro de Risas
                     System.out.println(monstruo.getNombre() + " está en el Centro de Risas...");
@@ -184,7 +185,7 @@ public class MonsterIncSimulation {
                     System.out.println(Thread.currentThread().getName() + " ha fabricado un tanque: " + nuevoTanque);
 
                     // Simular la fabricación de una puerta
-                    com.monstersinc.Puerta puertaFabricada = fabricaDePuertas.fabricarPuerta();
+                    Puerta puertaFabricada = fabricaDePuertas.fabricarPuerta();
                     almacenDePuertas.agregarPuerta(puertaFabricada);
 
                     // Simular la asignación de una puerta y su uso
@@ -204,12 +205,12 @@ public class MonsterIncSimulation {
                         System.out.println("Energía recolectada: " + recolector.getEnergiaAcumulada());
                     }
 
-                    executor.awaitTermination(1, TimeUnit.MINUTES);
+                    // executor.awaitTermination(1, TimeUnit.SECONDS);
                     // Quién es el proceso de cierre del Executor Service Lo que significa que no se aceptan más tareas
-                    executor.shutdown();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                executor.shutdown();
             });
         }
     }
