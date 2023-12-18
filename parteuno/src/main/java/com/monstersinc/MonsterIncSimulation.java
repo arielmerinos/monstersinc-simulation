@@ -74,19 +74,20 @@ public class MonsterIncSimulation {
 
         // Crear y ejecutar una tarea para manejar tanques del almacén
         ExecutorService manejadorDeTanques = Executors.newSingleThreadExecutor();
-        manejadorDeTanques.execute(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                if (fabricaDeTanques.cantidadTanquesEnAlmacen() > 0) {
-                    Tanque tanque = fabricaDeTanques.obtenerTanqueDelAlmacen();
-                    System.out.println("Manejando tanque del almacén: " + tanque);
-                }
-                try {
-                    Thread.sleep(5); // Tiempo de espera antes de manejar el siguiente tanque
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        });
+        // manejadorDeTanques.execute(() -> {
+        //     while (!Thread.currentThread().isInterrupted()) {
+        //         if (fabricaDeTanques.cantidadTanquesEnAlmacen() > 0) {
+        //             Tanque tanque = fabricaDeTanques.obtenerTanqueDelAlmacen();
+        //             System.out.println("Manejando tanque del almacén: " + tanque);
+        //         }
+        //         try {
+        //             Thread.sleep(5); // Tiempo de espera antes de manejar el siguiente tanque
+        //         } catch (InterruptedException e) {
+        //             Thread.currentThread().interrupt();
+        //         }
+        //     }
+        // });
+        // manejadorDeTanques.shutdown();
 
         /**
          * Instancia que representa un almacén de tanques.
@@ -109,17 +110,17 @@ public class MonsterIncSimulation {
             Monstruo monstruo = new Monstruo("Monstruo" + i, "Grande", "Azul", 25, i, "password" + i);
 
             // Crear y ejecutar una tarea para reparar elementos en un bucle continuo
-            ExecutorService reparadores = Executors.newFixedThreadPool(2); // Ejemplo con 2 reparadores
-            reparadores.execute(() -> {
-                while (!Thread.currentThread().isInterrupted()) {
-                    centroDeReparacion.repararItem();
-                    try {
-                        Thread.sleep(5); // Pequeña pausa entre reparaciones
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            });
+            // ExecutorService reparadores = Executors.newFixedThreadPool(2); // Ejemplo con 2 reparadores
+            // reparadores.execute(() -> {
+            //     while (!Thread.currentThread().isInterrupted()) {
+            //         centroDeReparacion.repararItem();
+            //         try {
+            //             Thread.sleep(5); // Pequeña pausa entre reparaciones
+            //         } catch (InterruptedException e) {
+            //             Thread.currentThread().interrupt();
+            //         }
+            //     }
+            // });
 
             // Ejecución de hilos concurrentes usando executor
             // la lambda está Representando el ciclo de vida de los monstruos
@@ -210,8 +211,8 @@ public class MonsterIncSimulation {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                executor.shutdown();
             });
         }
+        executor.shutdown();
     }
 }
